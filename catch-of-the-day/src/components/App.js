@@ -4,6 +4,17 @@ import Inventory from "./Inventory";
 import Order from "./Order";
 
 export default class App extends React.Component {
+
+	state = {
+		fishes: null,
+		order: {}
+	};
+
+	// constructor() {
+	// 	super();
+
+	// }
+
 	render() {
 		return (
 			<div className="catch-of-the-day">
