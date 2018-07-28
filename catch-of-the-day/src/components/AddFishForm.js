@@ -12,11 +12,14 @@ export default class AddFishForm extends Component {
 
 		const fish = {
 			name: this.nameRef.value.value,
-			price: parseFloat(this.priceRef.value.value) ,
+			price: parseFloat(this.priceRef.value.value),
 			status: this.statusRef.value.value,
 			desc: this.descRef.value.value,
 			img: this.imgRef.value.value,
 		};
+
+		this.props.addFish(fish);
+		e.currentTarget.reset();
 	}
 
 	render() {
@@ -28,7 +31,7 @@ export default class AddFishForm extends Component {
 					<option value="available">Fresh!</option>
 					<option value="unavailable">Sold Out!</option>
 				</select>
-				<textarea name="desc" placeholder="Desc" ref={this.statusRef} />
+				<textarea name="desc" placeholder="Desc" ref={this.descRef} />
 				<input type="text" name="img" placeholder="Image" ref={this.imgRef} />
 				<button type="submit" name="submit">+ Add Fish</button>
 			</form >
