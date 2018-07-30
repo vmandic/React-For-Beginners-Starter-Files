@@ -14,6 +14,7 @@ export default class Inventory extends Component {
 							index={k}
 							fish={this.props.fishes[k]}
 							updateFish={this.props.updateFish}
+							deleteFish={this.props.deleteFish}
 						/>
 					})
 				}

@@ -5,7 +5,6 @@ import Order from "./Order";
 import { default as sampleFishes } from "../sample-fishes";
 import Fish from "./Fish";
 import base from "../base";
-import { throws } from "assert";
 
 export default class App extends React.Component {
 
@@ -62,6 +61,18 @@ export default class App extends React.Component {
 		this.setState({ fishes });
 	}
 
+	deleteFish = (key) => {
+		const fishes = { ...this.state.fishes };
+		fishes[key] = null;
+		this.setState({ fishes });
+	}
+
+	removeFromOrder = key => {
+		const order = { ...this.state.order };
+		delete order[key];
+		this.setState({ order });
+	}
+
 	render() {
 		return (
 			<div className="catch-of-the-day">
@@ -81,12 +92,14 @@ export default class App extends React.Component {
 					addToOrder={this.addToOrder}
 					fishes={this.state.fishes}
 					order={this.state.order}
+					removeFromOrder={this.removeFromOrder}
 				/>
 				<Inventory
 					addFish={this.addFish}
 					loadSampleFishes={this.loadSampleFishes}
 					fishes={this.state.fishes}
 					updateFish={this.updateFish}
+					deleteFish={this.deleteFish}
 				/>
 			</div>
 		);

@@ -1,22 +1,37 @@
 import React, { Component } from 'react'
 import { formatPrice } from "../helpers";
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 export default class Order extends Component {
-	renderOrder = k => {
-		const fish = this.props.fishes[k];
-		const count = this.props.order[k];
+	renderOrder = key => {
+		const fish = this.props.fishes[key];
+		const count = this.props.order[key];
+
+		const transitionOpts = {
+			classNames: "order",
+			key,
+			timeout: { enter: 500, exit: 500 }
+		};
 
 		if (!fish) return null;
-		else if (fish.status == "available") {
+		else if (fish.status === "available") {
 			return (
-				<li key={k}>
-					{count} lbs {fish.name} &nbsp;
-					{formatPrice(count * fish.price)}
-				</li>
+				<CSSTransition {...transitionOpts}>
+					<li key={key}>
+						<TransitionGroup component="span" className="count">
+							<CSSTransition classNames="count" key={count} timeout={{ enter: 500, exit: 500 }}>
+								<span>{count}</span>
+							</CSSTransition>
+						</TransitionGroup>
+						lbs {fish.name} &nbsp;
+						{formatPrice(count * fish.price)}
+						<button onClick={() => this.props.removeFromOrder(key)}>&times;</button>
+					</li>
+				</CSSTransition>
 			);
 		}
 		else {
-			return <li key={k}>Sorry {fish && fish.name ? fish.name : "fish"} not available!</li>;
+			return <li key={key}>Sorry {fish && fish.name ? fish.name : "fish"} not available!</li>;
 		}
 
 	}
@@ -38,9 +53,9 @@ export default class Order extends Component {
 		return (
 			<div className="order-wrap">
 				<h2>Order</h2>
-				<ul className="order">
+				<TransitionGroup component="ul" className="order">
 					{orderIds.map(this.renderOrder)}
-				</ul>
+				</TransitionGroup>
 				<div className="total">
 					Total:&nbsp;
 					<strong>{formatPrice(total)}</strong>
