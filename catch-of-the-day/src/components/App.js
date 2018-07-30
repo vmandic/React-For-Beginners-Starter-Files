@@ -4,6 +4,8 @@ import Inventory from "./Inventory";
 import Order from "./Order";
 import { default as sampleFishes } from "../sample-fishes";
 import Fish from "./Fish";
+import base from "../base";
+import { throws } from "assert";
 
 export default class App extends React.Component {
 
@@ -11,6 +13,29 @@ export default class App extends React.Component {
 		fishes: {},
 		order: {}
 	};
+
+	componentDidMount() {
+		const { params } = this.props.match;
+		// reinstate local storage
+		const localStorageRef = localStorage.getItem(params.storeId);
+
+		if (localStorageRef) {
+			this.setState({ order: JSON.parse(localStorageRef) });
+		}
+
+		this.ref = base.syncState(`${params.storeId}/fishes`, {
+			context: this,
+			state: 'fishes'
+		}); // navigates into the database via object graph path
+	}
+
+	componentDidUpdate() {
+		localStorage.setItem(this.props.match.params.storeId, JSON.stringify(this.state.order));
+	}
+
+	componentWillUnmount() {
+		base.removeBinding(this.ref);
+	}
 
 	addFish = fish => {
 		console.log("Adding a fish...");
@@ -29,6 +54,12 @@ export default class App extends React.Component {
 		const order = { ...this.state.order };
 		order[key] = order[key] + 1 || 1;
 		this.setState({ order });
+	}
+
+	updateFish = (key, updatedFish) => {
+		const fishes = { ...this.state.fishes };
+		fishes[key] = updatedFish;
+		this.setState({ fishes });
 	}
 
 	render() {
@@ -54,6 +85,8 @@ export default class App extends React.Component {
 				<Inventory
 					addFish={this.addFish}
 					loadSampleFishes={this.loadSampleFishes}
+					fishes={this.state.fishes}
+					updateFish={this.updateFish}
 				/>
 			</div>
 		);

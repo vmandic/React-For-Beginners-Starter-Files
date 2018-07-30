@@ -6,7 +6,8 @@ export default class Order extends Component {
 		const fish = this.props.fishes[k];
 		const count = this.props.order[k];
 
-		if (fish && fish.status == "available") {
+		if (!fish) return null;
+		else if (fish.status == "available") {
 			return (
 				<li key={k}>
 					{count} lbs {fish.name} &nbsp;
